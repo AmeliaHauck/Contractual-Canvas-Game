@@ -216,6 +216,20 @@ function clearGuessHistory() {
   guessHistoryList.innerHTML = '';
 }
 
+function hideWelcomeModal() {
+  const modal = document.getElementById('welcomeModal');
+  if (!modal) return;
+  modal.classList.add('hidden');
+  scheduleFitGameToViewport();
+}
+
+function showWelcomeModal() {
+  const modal = document.getElementById('welcomeModal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+  scheduleFitGameToViewport();
+}
+
 function renderGuessHistory(entries) {
   clearGuessHistory();
   if (!Array.isArray(entries)) return;
@@ -1266,6 +1280,7 @@ function joinGame() {
   document.getElementById('setupModal').style.display = 'none';
   document.getElementById('gameContainer').style.display = 'flex';
   setCanvasStatus('Waiting for the host to start the game.', 'waiting');
+  showWelcomeModal();
   scheduleFitGameToViewport();
 
   // DO NOT auto-start game - wait for explicit button

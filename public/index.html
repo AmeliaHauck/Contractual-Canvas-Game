@@ -1163,6 +1163,87 @@
       animation: panelReveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
 
+    .welcome-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.68);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1002;
+      padding: 20px;
+    }
+
+    .welcome-modal.hidden {
+      display: none;
+    }
+
+    .welcome-card {
+      width: min(92%, 760px);
+      background: linear-gradient(180deg, #25324a 0%, #1b2438 100%);
+      border-radius: 28px;
+      padding: 30px 30px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(110, 231, 183, 0.72);
+      animation: panelReveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+      position: relative;
+    }
+
+    .welcome-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      line-height: 1;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: none;
+    }
+
+    .welcome-close-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .welcome-card h2 {
+      margin-bottom: 16px;
+      font-size: 28px;
+      line-height: 1.25;
+      color: #d1fae5;
+      padding-right: 40px;
+    }
+
+    .welcome-rules {
+      margin: 0 0 18px 18px;
+      color: #e5e7eb;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .welcome-rules li + li {
+      margin-top: 8px;
+    }
+
+    .welcome-footer {
+      color: #c7d2fe;
+      font-size: 17px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .welcome-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
     .setup-form h2 {
       margin-bottom: 24px;
       font-size: 22px;
@@ -1850,6 +1931,24 @@
         <p style="color: #9ca3af; font-size: 15px; margin-bottom: 6px;">Game ID is fixed: contractual-canvas</p>
       </div>
       <button onclick="joinGame()" style="width: 100%; margin-top: 16px;">Join Game</button>
+    </div>
+  </div>
+
+  <div class="welcome-modal hidden" id="welcomeModal">
+    <div class="welcome-card">
+      <button class="welcome-close-btn" type="button" onclick="hideWelcomeModal()" aria-label="Close welcome message">&times;</button>
+      <h2>Welcome to the Schneider Electric Contractual Canvas Game!</h2>
+      <ul class="welcome-rules">
+        <li>One player draws while everyone else tries to guess the word.</li>
+        <li>Type your guess in the guess box and press Enter.</li>
+        <li>Your team earns points for correct guesses.</li>
+        <li>Watch the timer and use hints when they appear.</li>
+        <li>Hosts Marlene and Amelia will start each round.</li>
+      </ul>
+      <div class="welcome-footer">Please hang tight while we wait for others to join and your hosts Marlene and Amelia will start the game!</div>
+      <div class="welcome-actions">
+        <button type="button" onclick="hideWelcomeModal()">Got it</button>
+      </div>
     </div>
   </div>
 
