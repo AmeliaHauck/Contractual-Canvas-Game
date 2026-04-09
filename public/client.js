@@ -54,19 +54,10 @@ function canUseHostControls() {
   return allowedStarters.has((playerName || '').trim().toLowerCase());
 }
 
-function shouldUseViewportScaling() {
-  return window.innerWidth > 1024 && window.innerHeight > 720;
-}
-
 function fitGameToViewport() {
   const shellFrame = document.getElementById('appShellFrame');
   const appShell = document.getElementById('appShell');
   if (!shellFrame || !appShell) return;
-
-  if (!shouldUseViewportScaling()) {
-    appShell.style.transform = '';
-    return;
-  }
 
   appShell.style.transform = 'scale(1)';
 
