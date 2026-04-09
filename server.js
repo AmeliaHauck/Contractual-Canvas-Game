@@ -123,6 +123,7 @@ class Game {
     this.guessHistory = [];
     this.canvasSnapshot = null;
     this.lastRoundSummary = null;
+    this.completedDrawerIds = new Set();
   }
 
   setPhase(phase, durationSeconds = 0) {
@@ -220,6 +221,7 @@ class Game {
     this.phase = 'lobby';
     this.phaseStartedAt = null;
     this.phaseDurationSeconds = 0;
+    this.completedDrawerIds.clear();
     this.clearRoundArtifacts();
 
     if (this.roundTimer) {
@@ -301,35 +303,42 @@ class Game {
     return scoreMap[this.currentDifficulty] || 1;
   }
 
-  pickRandomDrawer(excludedDrawerId = null) {
-    const availableTeams = Object.entries(this.teams)
-      .filter(([, team]) => team.players.length > 0)
-      .map(([teamId, team]) => ({ teamId, team }));
+  getActivePlayers() {
+    return Object.entries(this.teams).flatMap(([teamId, team]) =>
+      team.players.map((player) => ({ teamId, teamName: team.name, player }))
+    );
+  }
 
-    if (availableTeams.length === 0) {
+  pickRandomDrawer(excludedDrawerId = null) {
+    const activePlayers = this.getActivePlayers();
+
+    if (activePlayers.length === 0) {
       this.currentDrawingTeam = null;
       this.currentDrawer = null;
       return null;
     }
 
-    const eligibleTeamPool = availableTeams.filter(({ team }) =>
-      team.players.some((player) => player.id !== excludedDrawerId)
-    );
-    const teamPool = eligibleTeamPool.length > 0 ? eligibleTeamPool : availableTeams;
-    const chosenTeam = teamPool[Math.floor(Math.random() * teamPool.length)];
+    const selectablePlayers = activePlayers.filter(({ player }) => player.id !== excludedDrawerId);
+    const cyclePool = selectablePlayers.filter(({ player }) => !this.completedDrawerIds.has(player.id));
+    const playerPool = cyclePool.length > 0 ? cyclePool : selectablePlayers;
 
-    const eligiblePlayers = chosenTeam.team.players.filter((player) => player.id !== excludedDrawerId);
-    const playerPool = eligiblePlayers.length > 0 ? eligiblePlayers : chosenTeam.team.players;
-    const chosenPlayer = playerPool[Math.floor(Math.random() * playerPool.length)];
+    if (cyclePool.length === 0) {
+      this.completedDrawerIds.clear();
+    }
 
-    this.currentDrawingTeam = chosenTeam.teamId;
-    this.currentDrawer = chosenPlayer.id;
+    const chosenEntry = playerPool.length > 0
+      ? playerPool[Math.floor(Math.random() * playerPool.length)]
+      : activePlayers[Math.floor(Math.random() * activePlayers.length)];
+
+    this.currentDrawingTeam = chosenEntry.teamId;
+    this.currentDrawer = chosenEntry.player.id;
+    this.completedDrawerIds.add(chosenEntry.player.id);
 
     return {
-      teamId: chosenTeam.teamId,
-      teamName: chosenTeam.team.name,
-      drawerId: chosenPlayer.id,
-      drawerName: chosenPlayer.name
+      teamId: chosenEntry.teamId,
+      teamName: chosenEntry.teamName,
+      drawerId: chosenEntry.player.id,
+      drawerName: chosenEntry.player.name
     };
   }
 
@@ -506,6 +515,8 @@ class Game {
     if (team) {
       team.players = team.players.filter(p => p.id !== playerId);
     }
+
+    this.completedDrawerIds.delete(playerId);
 
     delete players[playerId];
     return game.teams;
