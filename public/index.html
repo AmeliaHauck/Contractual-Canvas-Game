@@ -1250,6 +1250,31 @@
       overflow: hidden;
     }
 
+    .game-over-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      z-index: 1;
+    }
+
+    .game-over-close-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateY(-1px);
+    }
+
     .game-over-card::before,
     .game-over-card::after {
       content: "";
@@ -1405,6 +1430,38 @@
       color: #86efac;
       font-size: 18px;
       font-weight: 700;
+    }
+
+    .game-over-actions {
+      position: relative;
+      z-index: 1;
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .game-over-actions button {
+      min-width: 160px;
+    }
+
+    .game-over-actions .secondary-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .game-over-actions .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .game-over-actions .danger-btn {
+      background: #b91c1c;
+    }
+
+    .game-over-actions .danger-btn:hover {
+      background: #991b1b;
     }
 
     .guesser-hint-modal {
@@ -1746,11 +1803,16 @@
 
   <div class="game-over-modal hidden" id="gameOverModal">
     <div class="game-over-card">
+      <button class="game-over-close-btn" type="button" onclick="hideGameOverModal()" aria-label="Close winner announcement">&times;</button>
       <div class="game-over-title" id="gameOverTitle">Champions!</div>
       <div class="game-over-subtitle" id="gameOverSubtitle">The final standings are in.</div>
       <div class="game-over-winner-line" id="gameOverWinnerLine"></div>
       <div class="podium-stage" id="gameOverPodium"></div>
       <div class="game-over-footer" id="gameOverFooter">Restart the game to crown the next winner.</div>
+      <div class="game-over-actions">
+        <button class="secondary-btn" type="button" onclick="hideGameOverModal()">Close</button>
+        <button id="gameOverRestartGameBtn" class="danger-btn hidden" type="button" onclick="restartGame()">Restart Game</button>
+      </div>
     </div>
   </div>
 

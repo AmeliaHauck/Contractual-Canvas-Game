@@ -1127,6 +1127,7 @@ function updateHostControls() {
   const restartBtn = document.getElementById('hostRestartRoundBtn');
   const nextBtn = document.getElementById('hostNextRoundBtn');
   const restartGameBtn = document.getElementById('hostRestartGameBtn');
+  const modalRestartGameBtn = document.getElementById('gameOverRestartGameBtn');
   const addPointsBtn = document.getElementById('hostAddPointsBtn');
   const removePointsBtn = document.getElementById('hostRemovePointsBtn');
   const teamSelect = document.getElementById('hostTeamSelect');
@@ -1152,6 +1153,11 @@ function updateHostControls() {
 
   if (restartGameBtn) {
     restartGameBtn.disabled = false;
+  }
+
+  if (modalRestartGameBtn) {
+    modalRestartGameBtn.classList.toggle('hidden', !canControlRounds);
+    modalRestartGameBtn.disabled = false;
   }
 
   if (addPointsBtn) {
