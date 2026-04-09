@@ -270,10 +270,10 @@
     .host-controls {
       width: 100%;
       display: none;
-      align-items: center;
-      justify-content: center;
-      gap: clamp(8px, 1vw, 12px);
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-start;
+      gap: 10px;
       padding: clamp(10px, 1.2vw, 14px);
       background: linear-gradient(180deg, rgba(30, 44, 70, 0.94), rgba(22, 33, 56, 0.92));
       border: 1px solid rgba(110, 231, 183, 0.2);
@@ -287,13 +287,52 @@
       display: flex;
     }
 
+    .host-controls-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .host-controls-label {
       font-size: clamp(14px, 1.2vw, 16px);
       font-weight: 700;
       color: #a7f3d0;
-      margin-right: 4px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
+    }
+
+    .host-controls-toggle {
+      min-width: 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e5f7ee;
+    }
+
+    .host-controls-toggle:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .host-controls-body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 1vw, 12px);
+      flex-wrap: wrap;
+      min-height: 0;
+    }
+
+    .host-controls.collapsed {
+      padding-bottom: clamp(10px, 1.2vw, 14px);
+    }
+
+    .host-controls.collapsed .host-controls-body {
+      display: none;
     }
 
     .host-controls button {
@@ -1811,20 +1850,25 @@
 
       <div class="container" id="gameContainer" style="display: none;">
     <div class="host-controls" id="hostControls">
-      <div class="host-controls-label">Host Controls</div>
-      <button id="hostPrimaryBtn" onclick="togglePrimaryHostAction()">Start Game</button>
-      <button id="hostRestartRoundBtn" onclick="restartRound()">Restart Round</button>
-      <button id="hostNextRoundBtn" onclick="startNewRound()">Next Round</button>
-      <button id="hostRestartGameBtn" class="danger-btn" onclick="restartGame()">Restart Game</button>
-      <div class="host-score-controls">
-        <select id="hostTeamSelect" aria-label="Select team for score adjustment">
-          <option value="team1">Team: Send It to Legal</option>
-          <option value="team2">Team: Oops, All Addendums</option>
-          <option value="team3">Team: The Redline Rangers</option>
-        </select>
-        <input type="number" id="hostPointInput" min="1" max="20" step="1" value="1" aria-label="Points to add">
-        <button id="hostAddPointsBtn" onclick="addPointsToTeam()">Add Points</button>
-        <button id="hostRemovePointsBtn" class="secondary-danger-btn" onclick="removePointsFromTeam()">Remove Points</button>
+      <div class="host-controls-header">
+        <div class="host-controls-label">Host Controls</div>
+        <button id="hostControlsToggleBtn" class="host-controls-toggle" type="button" onclick="toggleHostControlsCollapsed()">Collapse</button>
+      </div>
+      <div class="host-controls-body" id="hostControlsBody">
+        <button id="hostPrimaryBtn" onclick="togglePrimaryHostAction()">Start Game</button>
+        <button id="hostRestartRoundBtn" onclick="restartRound()">Restart Round</button>
+        <button id="hostNextRoundBtn" onclick="startNewRound()">Next Round</button>
+        <button id="hostRestartGameBtn" class="danger-btn" onclick="restartGame()">Restart Game</button>
+        <div class="host-score-controls">
+          <select id="hostTeamSelect" aria-label="Select team for score adjustment">
+            <option value="team1">Team: Send It to Legal</option>
+            <option value="team2">Team: Oops, All Addendums</option>
+            <option value="team3">Team: The Redline Rangers</option>
+          </select>
+          <input type="number" id="hostPointInput" min="1" max="20" step="1" value="1" aria-label="Points to add">
+          <button id="hostAddPointsBtn" onclick="addPointsToTeam()">Add Points</button>
+          <button id="hostRemovePointsBtn" class="secondary-danger-btn" onclick="removePointsFromTeam()">Remove Points</button>
+        </div>
       </div>
     </div>
 

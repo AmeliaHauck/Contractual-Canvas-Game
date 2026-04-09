@@ -43,6 +43,7 @@ let remoteDrawerCursor = null;
 let lastCursorEmitAt = 0;
 let fitViewportFrame = 0;
 let hostGameStarted = false;
+let hostControlsCollapsed = false;
 let bypassPromptSelection = false; // set true for drawing-board-only mode (now false to enable manual prompt buttons)
 let gameJoined = false;
 const allowedStarters = new Set(['amelia', 'marlene']);
@@ -1123,9 +1124,16 @@ function togglePrimaryHostAction() {
   startGameRound();
 }
 
+function toggleHostControlsCollapsed() {
+  hostControlsCollapsed = !hostControlsCollapsed;
+  updateHostControls();
+  scheduleFitGameToViewport();
+}
+
 function updateHostControls() {
   const canControlRounds = canUseHostControls();
   const hostControls = document.getElementById('hostControls');
+  const hostControlsToggleBtn = document.getElementById('hostControlsToggleBtn');
   const primaryBtn = document.getElementById('hostPrimaryBtn');
   const restartBtn = document.getElementById('hostRestartRoundBtn');
   const nextBtn = document.getElementById('hostNextRoundBtn');
@@ -1138,6 +1146,12 @@ function updateHostControls() {
 
   if (hostControls) {
     hostControls.classList.toggle('visible', canControlRounds);
+    hostControls.classList.toggle('collapsed', canControlRounds && hostControlsCollapsed);
+  }
+
+  if (hostControlsToggleBtn) {
+    hostControlsToggleBtn.textContent = hostControlsCollapsed ? 'Expand' : 'Collapse';
+    hostControlsToggleBtn.setAttribute('aria-expanded', String(!hostControlsCollapsed));
   }
 
   if (primaryBtn) {
