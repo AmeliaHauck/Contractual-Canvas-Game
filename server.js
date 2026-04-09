@@ -172,6 +172,7 @@ class Game {
 
   getJoinState(playerId) {
     const playerData = players[playerId];
+    const isDrawer = playerId === this.currentDrawer;
 
     return {
       teams: this.teams,
@@ -183,6 +184,7 @@ class Game {
       roundDuration: this.roundDuration,
       remainingSeconds: this.getRemainingPhaseSeconds(),
       currentPrompt: this.currentPrompt,
+      drawerHint: isDrawer ? (this.currentPromptMeta?.drawerHint || '') : '',
       guessHistory: this.guessHistory,
       canvasSnapshot: this.canvasSnapshot,
       intermission: this.lastRoundSummary,
@@ -635,11 +637,19 @@ io.on('connection', (socket) => {
     game.hintsRevealed = { first: false, second: false };
     game.setPhase('countdown', game.preRoundCountdown);
 
-    io.to(gameId).emit('round_prompt_selected', {
+    io.to(gameId).except(game.currentDrawer).emit('round_prompt_selected', {
       drawer: game.currentDrawer,
       drawerName: drawer?.name || null,
       countdown: game.preRoundCountdown,
       duration: game.roundDuration
+    });
+
+    io.to(game.currentDrawer).emit('round_prompt_selected', {
+      drawer: game.currentDrawer,
+      drawerName: drawer?.name || null,
+      countdown: game.preRoundCountdown,
+      duration: game.roundDuration,
+      drawerHint: game.currentPromptMeta?.drawerHint || ''
     });
 
     setTimeout(() => {
@@ -657,7 +667,8 @@ io.on('connection', (socket) => {
         drawer: game.currentDrawer,
         drawerName: drawer?.name || null,
         canDraw: true,
-        duration: game.roundDuration
+        duration: game.roundDuration,
+        drawerHint: game.currentPromptMeta?.drawerHint || ''
       });
 
       // Start round timer after the countdown ends.

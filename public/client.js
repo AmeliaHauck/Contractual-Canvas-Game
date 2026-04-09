@@ -31,6 +31,7 @@ let promptChoiceTimeout = null;
 let promptChoiceInterval = null;
 let currentPromptOptions = [];
 let currentPromptHintLevel = 0;
+let activeDrawerHint = '';
 let finalGuessers = {};
 let finalGuessActive = false;
 let canDraw = false;
@@ -200,6 +201,15 @@ function setPromptHighlight(isHighlighted) {
   promptText.classList.toggle('drawer-prompt', isHighlighted);
 }
 
+function setDrawerHintVisibility(isVisible, hintText = '') {
+  const hintPanel = document.getElementById('drawerHintPanel');
+  const hintTextEl = document.getElementById('drawerHintText');
+  if (!hintPanel || !hintTextEl) return;
+
+  hintTextEl.textContent = hintText || '';
+  hintPanel.classList.toggle('hidden', !isVisible || !hintText);
+}
+
 function clearGuessHistory() {
   const guessHistoryList = document.getElementById('guessHistoryList');
   if (!guessHistoryList) return;
@@ -292,6 +302,8 @@ function clearRoundUiState() {
 
   stopLiveRoundTimer();
   hideIntermissionModal();
+  activeDrawerHint = '';
+  setDrawerHintVisibility(false);
 }
 
 function applyCanvasSnapshot(snapshot) {
@@ -510,6 +522,7 @@ function syncJoinedPlayerState(state) {
 
   currentDrawer = state.currentDrawer || null;
   currentDrawerName = state.currentDrawerName || null;
+  activeDrawerHint = state.drawerHint || '';
   if (state.assignedTeam) {
     teamId = state.assignedTeam;
   }
@@ -523,7 +536,7 @@ function syncJoinedPlayerState(state) {
 
   finalGuessActive = false;
   canDraw = false;
-  activePrompt = '';
+  activePrompt = state.currentPrompt || '';
   updateDrawingControlsVisibility();
 
   const drawingTeamName = state.currentDrawingTeam && state.teams?.[state.currentDrawingTeam]?.name
@@ -534,6 +547,7 @@ function syncJoinedPlayerState(state) {
   switch (state.phase) {
     case 'prompt_selection':
       hostGameStarted = true;
+      setDrawerHintVisibility(false);
       setGuessInputVisibility(true);
       setPromptHighlight(false);
       setCanvasStatus(`${state.currentDrawerName || 'The drawer'} is drawing this round.`, 'locked');
@@ -543,11 +557,13 @@ function syncJoinedPlayerState(state) {
       break;
     case 'countdown':
       hostGameStarted = true;
+      setDrawerHintVisibility(Boolean(activeDrawerHint), activeDrawerHint);
       resetTimerDisplay(state.roundDuration ?? DEFAULT_ROUND_DURATION);
       startSyncedPreRoundCountdown(remainingSeconds);
       break;
     case 'live':
       hostGameStarted = true;
+      setDrawerHintVisibility(Boolean(activeDrawerHint), activeDrawerHint);
       setGuessInputVisibility(true);
       setPromptHighlight(true);
       setCanvasStatus(`${state.currentDrawerName || 'The drawer'} is drawing this round.`, 'locked');
@@ -556,6 +572,7 @@ function syncJoinedPlayerState(state) {
       resetTimerDisplay(remainingSeconds || state.roundDuration || DEFAULT_ROUND_DURATION);
       break;
     case 'intermission':
+      setDrawerHintVisibility(false);
       setGuessInputVisibility(true);
       setPromptHighlight(false);
       document.getElementById('guessInput').disabled = false;
@@ -565,6 +582,7 @@ function syncJoinedPlayerState(state) {
       break;
     case 'game_over':
       hostGameStarted = false;
+      setDrawerHintVisibility(false);
       setGuessInputVisibility(true);
       setPromptHighlight(false);
       document.getElementById('guessInput').disabled = false;
@@ -579,6 +597,7 @@ function syncJoinedPlayerState(state) {
     case 'lobby':
     default:
       hostGameStarted = false;
+      setDrawerHintVisibility(false);
       setGuessInputVisibility(true);
       setPromptHighlight(false);
       document.getElementById('guessInput').disabled = false;
@@ -1424,12 +1443,16 @@ socket.on('round_prompt_selected', (data) => {
   }
 
   if (isDrawer) {
+    activeDrawerHint = data.drawerHint || activeDrawerHint || '';
+    setDrawerHintVisibility(Boolean(activeDrawerHint), activeDrawerHint);
     setGuessInputVisibility(false);
     setPromptHighlight(true);
     setCanvasStatus('You are drawing this round.', 'waiting');
     document.getElementById('promptText').textContent = `🖌️ Draw: ${activePrompt}`;
     showNotification(`Get ready to draw in ${countdownSeconds}...`);
   } else {
+    activeDrawerHint = '';
+    setDrawerHintVisibility(false);
     setGuessInputVisibility(true);
     setPromptHighlight(true);
     setCanvasStatus(`${currentDrawerName || 'The drawer'} is drawing this round.`, 'locked');
@@ -1484,12 +1507,16 @@ socket.on('round_live_started', (data) => {
   updateDrawingControlsVisibility();
 
   if (isDrawer) {
+    activeDrawerHint = data.drawerHint || activeDrawerHint || '';
+    setDrawerHintVisibility(Boolean(activeDrawerHint), activeDrawerHint);
     setGuessInputVisibility(false);
     setPromptHighlight(true);
     setCanvasStatus('You are drawing this round.', 'ready');
     document.getElementById('promptText').textContent = `🖌️ Draw: ${activePrompt}`;
     showNotification('GO! Start drawing now.');
   } else {
+    activeDrawerHint = '';
+    setDrawerHintVisibility(false);
     setGuessInputVisibility(true);
     setPromptHighlight(true);
     setCanvasStatus(`${currentDrawerName || 'The drawer'} is drawing this round.`, 'locked');
@@ -1583,6 +1610,7 @@ socket.on('round_ended', (data) => {
   finalGuessActive = false;
   canDraw = false;
   activePrompt = '';
+  activeDrawerHint = '';
   hostGameStarted = true;
   clearRoundUiState();
   stopDrawing();
@@ -1610,6 +1638,7 @@ socket.on('game_reset', (data) => {
   finalGuessActive = false;
   canDraw = false;
   activePrompt = '';
+  activeDrawerHint = '';
   currentDrawer = null;
   currentDrawerName = null;
   drawingHistory = [];
@@ -1640,6 +1669,7 @@ socket.on('game_over', (data) => {
   finalGuessActive = false;
   canDraw = false;
   activePrompt = '';
+  activeDrawerHint = '';
   clearRoundUiState();
   hidePromptChoiceModal();
   document.getElementById('guessInput').disabled = false;
@@ -1803,7 +1833,9 @@ function selectPrompt(promptOption, difficulty = 'Easy') {
 
   currentPromptOptions = [];
   activePrompt = normalizedPrompt.text;
+  activeDrawerHint = normalizedPrompt.drawerHint || '';
   setPromptHighlight(true);
+  setDrawerHintVisibility(Boolean(activeDrawerHint), activeDrawerHint);
   hidePromptChoiceModal();
   document.getElementById('promptText').textContent = `🖌️ Draw: ${normalizedPrompt.text}`;
   socket.emit('select_prompt', {
