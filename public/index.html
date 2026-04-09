@@ -718,10 +718,29 @@
     }
 
     .drawer-hint-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       color: #e5e7eb;
       font-size: clamp(12px, 0.95vw, 14px);
       line-height: 1.35;
       font-weight: 600;
+    }
+
+    .prompt-side-hint-entry {
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .prompt-side-hint-entry strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fde68a;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     .prompt-section::after {
@@ -2034,7 +2053,7 @@
                 <div class="timer" id="timer">90 seconds</div>
               </div>
               <div class="drawer-hint-panel hidden" id="drawerHintPanel">
-                <div class="drawer-hint-label">Drawing Hint</div>
+                <div class="drawer-hint-label" id="drawerHintLabel">Drawing Hint</div>
                 <div class="drawer-hint-text" id="drawerHintText"></div>
               </div>
             </div>
