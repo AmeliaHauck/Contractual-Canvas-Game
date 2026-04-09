@@ -253,6 +253,12 @@
       max-height: 100%;
     }
 
+    .game-prompt-panel {
+      flex: 0 0 148px;
+      min-height: 120px;
+      max-height: 188px;
+    }
+
     .top-layout {
       display: flex;
       gap: clamp(10px, 1.5vw, 20px);
@@ -1825,7 +1831,7 @@
       <div class="content-layout game-layout">
         <!-- Left column: Prompt + Canvas -->
         <div class="game-main-column">
-          <div class="prompt-section" style="flex: 0 0 220px; min-height: 180px; max-height: 280px;">
+          <div class="prompt-section game-prompt-panel">
             <div class="prompt-text" id="promptText">Waiting for game to start...</div>
             <div class="timer" id="timer">90 seconds</div>
           </div>
