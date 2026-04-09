@@ -1185,12 +1185,43 @@
     .welcome-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.68);
+      background:
+        radial-gradient(circle at 18% 20%, rgba(250, 204, 21, 0.2), transparent 20%),
+        radial-gradient(circle at 82% 18%, rgba(52, 211, 153, 0.24), transparent 22%),
+        radial-gradient(circle at 50% 82%, rgba(236, 72, 153, 0.18), transparent 24%),
+        rgba(5, 10, 20, 0.78);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1002;
       padding: 20px;
+      overflow: hidden;
+    }
+
+    .welcome-modal::before,
+    .welcome-modal::after {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 999px;
+      filter: blur(28px);
+      opacity: 0.45;
+      pointer-events: none;
+      animation: welcomeFloat 8s ease-in-out infinite;
+    }
+
+    .welcome-modal::before {
+      top: -80px;
+      left: -40px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.72), rgba(34, 197, 94, 0));
+    }
+
+    .welcome-modal::after {
+      right: -60px;
+      bottom: -90px;
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.7), rgba(250, 204, 21, 0));
+      animation-delay: -3.5s;
     }
 
     .welcome-modal.hidden {
@@ -1199,13 +1230,40 @@
 
     .welcome-card {
       width: min(92%, 760px);
-      background: linear-gradient(180deg, #25324a 0%, #1b2438 100%);
-      border-radius: 28px;
-      padding: 30px 30px 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-      border: 2px solid rgba(110, 231, 183, 0.72);
-      animation: panelReveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+      background:
+        linear-gradient(145deg, rgba(19, 36, 57, 0.98), rgba(25, 37, 67, 0.98)),
+        linear-gradient(180deg, #25324a 0%, #1b2438 100%);
+      border-radius: 34px;
+      padding: 34px 34px 28px;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      border: 2px solid rgba(110, 231, 183, 0.82);
+      animation: welcomeBurst 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
       position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-card::before,
+    .welcome-card::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .welcome-card::before {
+      top: -70px;
+      left: -50px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(52, 211, 153, 0.28), rgba(52, 211, 153, 0));
+    }
+
+    .welcome-card::after {
+      right: -50px;
+      bottom: -70px;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.26), rgba(250, 204, 21, 0));
     }
 
     .welcome-close-btn {
@@ -1221,50 +1279,92 @@
       justify-content: center;
       font-size: 24px;
       line-height: 1;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.12);
       color: #f8fafc;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+      z-index: 1;
     }
 
     .welcome-close-btn:hover {
-      background: rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.22);
     }
 
     .welcome-card h2 {
-      margin-bottom: 16px;
-      font-size: 28px;
-      line-height: 1.25;
-      color: #d1fae5;
+      margin-bottom: 18px;
+      font-size: clamp(30px, 3vw, 42px);
+      line-height: 1.15;
+      color: #f8fafc;
       padding-right: 40px;
       text-align: center;
+      text-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-card h2 span {
+      display: inline-block;
+      padding: 0 6px;
+      background: linear-gradient(90deg, #fde68a, #6ee7b7, #f9a8d4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .welcome-rules {
       margin: 0 0 18px 0;
-      color: #e5e7eb;
+      color: #eef2ff;
       font-size: 17px;
       line-height: 1.5;
       text-align: center;
-      list-style-position: inside;
+      list-style: none;
+      position: relative;
+      z-index: 1;
     }
 
     .welcome-rules li + li {
-      margin-top: 8px;
+      margin-top: 10px;
+    }
+
+    .welcome-rules li {
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .welcome-rules li::before {
+      content: "•";
+      color: #6ee7b7;
+      font-size: 20px;
+      margin-right: 8px;
     }
 
     .welcome-footer {
-      color: #c7d2fe;
+      color: #dbeafe;
       font-size: 17px;
       line-height: 1.5;
-      font-weight: 600;
+      font-weight: 700;
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     .welcome-actions {
       margin-top: 20px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-actions button {
+      min-width: 180px;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 12px 22px;
+      box-shadow: 0 14px 28px rgba(16, 185, 129, 0.24);
     }
 
     .setup-form h2 {
@@ -1923,6 +2023,30 @@
       }
     }
 
+    @keyframes welcomeBurst {
+      0% {
+        opacity: 0;
+        transform: translateY(28px) scale(0.9) rotate(-1.5deg);
+      }
+      70% {
+        opacity: 1;
+        transform: translateY(-6px) scale(1.02) rotate(0.5deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes welcomeFloat {
+      0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      50% {
+        transform: translate3d(18px, -16px, 0) scale(1.08);
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1960,7 +2084,7 @@
   <div class="welcome-modal hidden" id="welcomeModal">
     <div class="welcome-card">
       <button class="welcome-close-btn" type="button" onclick="hideWelcomeModal()" aria-label="Close welcome message">&times;</button>
-      <h2>Welcome to the Schneider Electric Contractual Canvas Game!</h2>
+      <h2>Welcome to the <span>Schneider Electric Contractual Canvas Game!</span></h2>
       <ul class="welcome-rules">
         <li>One player draws the prompt while everyone else tries to guess it as quickly as possible.</li>
         <li>Type your guess in the guess box and press Enter each time you want to submit an answer.</li>
