@@ -900,16 +900,9 @@ function handleTouchStart(e) {
 function handleTouchMove(e) {
   if (!isDrawing || !hasDrawAccess()) return;
   e.preventDefault();
-    const previousState = drawingHistory.pop();
-    if (previousState) {
-      ctx.putImageData(previousState, 0, 0);
-    } else {
-      redrawCanvas();
-    }
-    socket.emit('undo', {
-      gameId,
-      snapshot: canvas.toDataURL('image/png')
-    });
+
+  const touch = e.touches[0];
+  const { x, y } = getCanvasPoint(touch.clientX, touch.clientY);
   emitCursorPosition(x, y);
   const startX = lastDrawPoint ? lastDrawPoint.x : x;
   const startY = lastDrawPoint ? lastDrawPoint.y : y;
@@ -1011,8 +1004,12 @@ function hideIntermissionModal() {
 function undoDrawing() {
   if (!hasDrawAccess()) return;
   if (drawingHistory.length > 0) {
-    drawingHistory.pop();
-    redrawCanvas();
+    const previousState = drawingHistory.pop();
+    if (previousState) {
+      ctx.putImageData(previousState, 0, 0);
+    } else {
+      redrawCanvas();
+    }
     socket.emit('undo', {
       gameId,
       snapshot: canvas.toDataURL('image/png')
