@@ -264,6 +264,14 @@ function showWelcomeModal() {
   scheduleFitGameToViewport();
 }
 
+function updateWelcomeTeamMessage(teamName) {
+  const message = document.getElementById('welcomeTeamMessage');
+  if (!message) return;
+
+  const resolvedTeamName = teamName || 'your team';
+  message.innerHTML = `You have joined <span>${resolvedTeamName}</span>! Good luck and channel your inner Bob Ross!`;
+}
+
 function renderGuessHistory(entries) {
   clearGuessHistory();
   if (!Array.isArray(entries)) return;
@@ -1342,6 +1350,7 @@ socket.on('player_joined', (data) => {
   );
   if (ownTeamEntry) {
     teamId = ownTeamEntry[0];
+    updateWelcomeTeamMessage(ownTeamEntry[1]?.name || 'your team');
   }
 });
 

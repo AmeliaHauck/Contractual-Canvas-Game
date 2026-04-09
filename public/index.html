@@ -1341,6 +1341,22 @@
       margin-right: 8px;
     }
 
+    .welcome-team-message {
+      margin: 0 0 18px;
+      text-align: center;
+      font-size: 19px;
+      line-height: 1.4;
+      font-weight: 800;
+      color: #fef3c7;
+      text-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-team-message span {
+      color: #86efac;
+    }
+
     .welcome-footer {
       color: #dbeafe;
       font-size: 17px;
@@ -2085,6 +2101,7 @@
     <div class="welcome-card">
       <button class="welcome-close-btn" type="button" onclick="hideWelcomeModal()" aria-label="Close welcome message">&times;</button>
       <h2>Welcome to the <span>Schneider Electric Contractual Canvas Game!</span></h2>
+      <div class="welcome-team-message" id="welcomeTeamMessage">You have joined <span>your team</span>! Good luck and channel your inner Bob Ross!</div>
       <ul class="welcome-rules">
         <li>One player draws the prompt while everyone else tries to guess it as quickly as possible.</li>
         <li>Type your guess in the guess box and press Enter each time you want to submit an answer.</li>
