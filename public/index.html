@@ -1237,13 +1237,16 @@
       line-height: 1.25;
       color: #d1fae5;
       padding-right: 40px;
+      text-align: center;
     }
 
     .welcome-rules {
-      margin: 0 0 18px 18px;
+      margin: 0 0 18px 0;
       color: #e5e7eb;
       font-size: 17px;
       line-height: 1.5;
+      text-align: center;
+      list-style-position: inside;
     }
 
     .welcome-rules li + li {
@@ -1255,6 +1258,7 @@
       font-size: 17px;
       line-height: 1.5;
       font-weight: 600;
+      text-align: center;
     }
 
     .welcome-actions {
@@ -1958,11 +1962,10 @@
       <button class="welcome-close-btn" type="button" onclick="hideWelcomeModal()" aria-label="Close welcome message">&times;</button>
       <h2>Welcome to the Schneider Electric Contractual Canvas Game!</h2>
       <ul class="welcome-rules">
-        <li>One player draws while everyone else tries to guess the word.</li>
-        <li>Type your guess in the guess box and press Enter.</li>
-        <li>Your team earns points for correct guesses.</li>
-        <li>Watch the timer and use hints when they appear.</li>
-        <li>Hosts Marlene and Amelia will start each round.</li>
+        <li>One player draws the prompt while everyone else tries to guess it as quickly as possible.</li>
+        <li>Type your guess in the guess box and press Enter each time you want to submit an answer.</li>
+        <li>Your team earns points when someone on your team guesses the drawing correctly.</li>
+        <li>Keep an eye on the timer and use the hints that appear to help narrow down the answer.</li>
       </ul>
       <div class="welcome-footer">Please hang tight while we wait for others to join and your hosts Marlene and Amelia will start the game!</div>
       <div class="welcome-actions">
